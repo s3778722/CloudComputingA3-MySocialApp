@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - MySocialApp{% endblock title %}
+
+{% block body %}
+{% if error %}
+    <div class="alert alert-primary" role="alert">
+        Error: {{error}}
+    </div> 
+{% endif %}
+
+<div class="container" style="padding-top:30px">
+    <div>
+        <form method="post" class="form-horizontal">
+            <h1>Login</h1>
+            <hr/><br/>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Email</label>
+                <div class="col-8">
+                    <input type="email" class="form-control" name="login-email" required="required">
+                </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Password</label>
+                <div class="col-8">
+                    <input type="password" class="form-control" name="login-password" required="required">
+                </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+                <div class="col-8 offset-4">
+                    <button type="submit" class="btn btn-primary btn-dark">Login</button>
+                </div>
+            </div>
+        </form>
+        <br/>
+        <div class="text-center">Don't have an account? <a href="/signup">Register here</a></div>
+    </div>
+</div>
+
+{% endblock body %}

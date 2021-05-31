@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Signup - MySocialApp{% endblock title %}
+
+{% block body %}
+{% if error %}
+    <div class="alert alert-primary" role="alert">
+        Error: {{error}}
+    </div> 
+{% endif %}
+
+<div class="container" style="padding-top:30px">
+    <div>
+        <form method="post" class="form-horizontal">
+            <h1>Sign Up</h1>
+            <hr/><br/>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Email</label>
+                <div class="col-8">
+                    <input type="email" class="form-control" name="signup-email" required="required">
+                </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Username</label>
+                <div class="col-8">
+                    <input type="text" class="form-control" name="signup-username" required>
+                </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Password</label>
+                <div class="col-8">
+                    <input type="password" class="form-control" name="signup-password" required="required">
+                </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+                <div class="col-8 offset-4">
+                    <button type="submit" class="btn btn-primary btn-dark">Signup</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock body %}
