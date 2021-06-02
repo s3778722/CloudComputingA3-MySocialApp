@@ -5,18 +5,6 @@
 
 {% block body %}
 
-{% with messages = get_flashed_messages(with_categories=true)  %}
-  {% if messages %}
-  <div class="alert alert-primary" role="alert">
-    
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-   
-  </div>
-  {% endif %}
-{% endwith %}
-
 <div class="container">
     <h1 class="text-center">
         <img src="/static/img/edit-profile.svg" alt="" width="35px" height="35px">

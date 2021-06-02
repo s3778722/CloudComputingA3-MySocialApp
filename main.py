@@ -101,16 +101,19 @@ def edit_password():
         old_pw = request.form.get('edit-old-pw')
         new_pw = request.form.get('edit-new-pw')
     
-                
-        users.update_item(
-        Key={
-            'email': g.email
-        },
-        UpdateExpression="set password = :p",
-        ExpressionAttributeValues={
-            ":p" : password               
-        }
-        )
+        if old_pw == user['password']:
+            users.update_item(
+            Key={
+                'email': g.email
+            },
+            UpdateExpression="set password = :p",
+            ExpressionAttributeValues={
+                ":p" : new_pw              
+            }
+            )
+            flash('Password updated successfully')
+        else:
+            flash('The old password is incorrect')
         return redirect(url_for('edit_password'))
 
 @app.route('/signup',methods=['GET','POST'])
