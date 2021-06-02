@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - MySocialApp{% endblock title %}
+
+
+{% block body %}
+<div class="container">
+    <h1 class="text-center">
+        <img src="/static/img/home.svg" alt="" width="35px" height="35px">
+        HOME
+    </h1>
+    <hr/>
+    <br/>   
+    <div class="row">
+        <div class="col-4">
+            <h4>Profile</h4>
+            {% if user['image_path'] %}
+            <div class="d-flex justify-content-center">
+                <img src="{{  user['image_path'] }}" alt="" style="border-radius: 50%;" width="100px" height="100px">
+            </div>
+            {% else %}
+            <div class="d-flex justify-content-center">
+                <img src=" https://mysocialapp.s3.us-east-2.amazonaws.com/default" alt="" style="border-radius: 50%;" width="100px" height="100px">
+            </div>
+            {% endif %}
+            <h2 class="text-center">{{g.username}}</h2>
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-dark" href="/edit/profile" role="button">Edit Profile</a>
+            </div>
+            <hr>
+            <p>Email: {{user['email']}}</p>
+            <p>Username: {{user['username']}}</p>
+            <p>About me: {{user['about']}}</p>
+            <p>Age: {{user['age']}} </p>
+            <p>Location: {{user['loc']}}</p>
+            <p>Joined: {{user['date']}} </p>
+            <hr>
+        </div>
+        <div class="col-8">
+            <h4>News Feed</h4>
+        </div>
+    </div>
+  </div>
+{% endblock body %}
