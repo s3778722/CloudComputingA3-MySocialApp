@@ -56,7 +56,7 @@ def edit_profile():
         age = request.form.get('edit-age')
         location = request.form.get('edit-location')
         img = request.files['edit-image']
-
+        
         if img:
             image = 'https://mysocialapp.s3.us-east-2.amazonaws.com/' + g.email
             filename = secure_filename(img.filename)
@@ -72,7 +72,7 @@ def edit_profile():
                 image = user['image_path']
             else:
                 image = None
-
+                
         users.update_item(
         Key={
             'email': g.email
@@ -87,6 +87,31 @@ def edit_profile():
         }
         )
         return redirect(url_for('edit_profile'))
+    
+@app.route('/edit/password',methods=['GET','POST'])
+def edit_password():
+    if request.method == 'GET':
+        response = users.get_item(Key={'email': g.email})
+        user = response['Item']
+        return render_template('edit_password.html', user = user)
+    elif request.method == 'POST':   
+        response = users.get_item(Key={'email': g.email})
+        user = response['Item']
+        
+        old_pw = request.form.get('edit-old-pw')
+        new_pw = request.form.get('edit-new-pw')
+    
+                
+        users.update_item(
+        Key={
+            'email': g.email
+        },
+        UpdateExpression="set password = :p",
+        ExpressionAttributeValues={
+            ":p" : password               
+        }
+        )
+        return redirect(url_for('edit_password'))
 
 @app.route('/signup',methods=['GET','POST'])
 def register():

@@ -4,6 +4,19 @@
 
 
 {% block body %}
+
+{% with messages = get_flashed_messages(with_categories=true)  %}
+  {% if messages %}
+  <div class="alert alert-primary" role="alert">
+    
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+   
+  </div>
+  {% endif %}
+{% endwith %}
+
 <div class="container">
     <h1 class="text-center">
         <img src="/static/img/edit-profile.svg" alt="" width="35px" height="35px">
@@ -50,7 +63,7 @@
                 <label class="col-form-label col-4">Change photo</label>
                 <div class="col-8">
                     {% if user['image_path'] %}
-                    <img src={{ user['image_path'] }} alt="post-image" style="
+                    <img src="{{ user['image_path'] }}" alt="post-image" style="
                         width: 250px;
                         height:250px;
                         padding: 10px;">
@@ -65,7 +78,11 @@
                 </div>
             </div>
         </form>
+        <br/>
+        <br/>
     </div>
+    <div class="text-center">Interested in updating your password? <a href="/edit/password">Change password here</a></div>
+    <br/>
 </div>
 </div>
 {% endblock body %}
