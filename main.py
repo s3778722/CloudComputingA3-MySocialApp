@@ -179,6 +179,21 @@ def login():
 def logout():
    session.pop('user_email', None)
    return redirect(url_for('login'))
+
+@app.route('/delete/profile-picture')
+def deletepp():
+    s3.delete_object(Bucket=BUCKET_NAME,Key=g.email)
+    response = users.get_item(Key={'email': g.email})
+    users.update_item(
+        Key={
+            'email': g.email
+        },
+        UpdateExpression="set image_path = :i",
+        ExpressionAttributeValues={
+            ":i" : None             
+        }
+        )
+    return redirect(url_for('home'))
         
 if __name__ == '__main__':
   app.run(host='127.0.0.1', port=8000, debug=True)
