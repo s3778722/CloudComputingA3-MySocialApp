@@ -72,20 +72,27 @@ def edit_profile():
                 image = user['image_path']
             else:
                 image = None
-                
-        users.update_item(
-        Key={
-            'email': g.email
-        },
-        UpdateExpression="set username = :u, about = :a, age = :age, loc= :loc, image_path = :i",
-        ExpressionAttributeValues={
-            ":u" : username,
-            ":a" : about,
-            ":age" : age,
-            ":loc" : location,
-            ":i" : image,                  
+
+        payload = {
+            "operation": "update",
+            "tableName": "users",
+            "payload": {
+                "key": {
+                    "email": g.email
+                },
+                "UpdateExpression": "set username = :u, about = :a, age = :age, loc= :loc, image_path = :i",
+                "ExpressionAttributeValues": {
+                    ":u": username,
+                    ":a": about,
+                    ":age": age,
+                    ":loc": location,
+                    ":i": image
+                }
+            }
         }
-        )
+            
+        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        print(response)
         return redirect(url_for('edit_profile'))
     
 @app.route('/edit/password',methods=['GET','POST'])
@@ -132,34 +139,31 @@ def register():
         username_signup = request.form.get('signup-username')
         password_signup = request.form.get('signup-password')
         
-        response = users.query(
-            KeyConditionExpression=Key('email').eq(email_signup)
-        )
-        
-        if response['Items']:
-            error = "The email already exists"  
+        payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": email_signup
+            }
+        }
 
-        # OLD DB CODE
-        # else:
-        #     users.put_item(
-        #         Item={
-        #             'email': email_signup,
-        #             'username': username_signup,
-        #             'password' : password_signup,
-        #             'date' : date
-        #         }
-        #     )
-        #     return redirect(url_for('login'))
+        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+
+        responseJson= response.json()
+        print(responseJson)
+        
+        if 'Item' in responseJson:
+            error = "The email already exists"  
 
         else:
             payload = {
                 "operation": "create",
                 "tableName": "users",
                 "payload":{
-                    "email": "kevy@hotmail.com ",
-                    "date" : "2021-11-30",       
-                    "password" : "asldfkjasdf",             
-                    "username": "asdlfkasjldfkj"
+                    "email": email_signup,
+                    "date" : date,       
+                    "password" : password_signup,             
+                    "username": username_signup
                 }
             }
             
