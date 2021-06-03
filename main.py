@@ -24,11 +24,17 @@ def before_request():
     if 'user_email' in session:
         user_email = session['user_email']
         g.email = user_email
-        
-        response = users.query(
-        KeyConditionExpression=Key('email').eq(g.email)
-        )
-        g.username = response['Items'][0]['username']
+
+        payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": g.email
+            }
+        }
+        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        responseJson = response.json()
+        g.username = responseJson['Item']['username']
 
 @app.route('/')
 def index():
@@ -36,20 +42,47 @@ def index():
 
 @app.route('/home',methods=['GET','POST'])
 def home():
-    response = users.get_item(Key={'email': g.email})
-    user = response['Item']
+    payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": g.email
+            }
+        }
+    response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+    responseJson = response.json()
+
+    user = responseJson['Item']
     if request.method == 'GET':
         return render_template('home.html', user = user)
     
 @app.route('/edit/profile',methods=['GET','POST'])
 def edit_profile():
     if request.method == 'GET':
-        response = users.get_item(Key={'email': g.email})
-        user = response['Item']
+        payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": g.email
+            }
+        }
+        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        responseJson = response.json()
+
+        user = responseJson['Item']
         return render_template('edit_profile.html', user = user)
-    elif request.method == 'POST':   
-        response = users.get_item(Key={'email': g.email})
-        user = response['Item']
+    elif request.method == 'POST':
+        payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": g.email
+            }
+        }
+        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        responseJson= response.json()
+
+        user = responseJson['Item']
              
         username = request.form.get('edit-username')
         about = request.form.get('edit-aboutme')
@@ -92,32 +125,57 @@ def edit_profile():
         }
             
         response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
-        print(response)
         return redirect(url_for('edit_profile'))
     
 @app.route('/edit/password',methods=['GET','POST'])
 def edit_password():
     if request.method == 'GET':
-        response = users.get_item(Key={'email': g.email})
-        user = response['Item']
+        payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": g.email
+            }
+        }
+        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        responseJson= response.json()
+
+        user = responseJson['Item']
         return render_template('edit_password.html', user = user)
     elif request.method == 'POST':   
-        response = users.get_item(Key={'email': g.email})
-        user = response['Item']
+        payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": g.email
+            }
+        }
+
+        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        responseJson= response.json()
+
+        user = responseJson['Item']
         
         old_pw = request.form.get('edit-old-pw')
         new_pw = request.form.get('edit-new-pw')
     
         if old_pw == user['password']:
-            users.update_item(
-            Key={
-                'email': g.email
-            },
-            UpdateExpression="set password = :p",
-            ExpressionAttributeValues={
-                ":p" : new_pw              
+
+            payload = {
+                "operation": "update",
+                "tableName": "users",
+                "payload": {
+                    "key": {
+                        "email": g.email
+                    },
+                    "UpdateExpression": "set password = :p",
+                    "ExpressionAttributeValues": {
+                        ":p" : new_pw
+                    }
+                }
             }
-            )
+            
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
             flash('Password updated successfully')
         else:
             flash('The old password is incorrect')
@@ -148,9 +206,7 @@ def register():
         }
 
         response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
-
         responseJson= response.json()
-        print(responseJson)
         
         if 'Item' in responseJson:
             error = "The email already exists"  
@@ -183,14 +239,25 @@ def login():
     elif request.method == 'POST':
         error = None
         email_login = request.form.get('login-email')
-        password_login = request.form.get('login-password')
+        password_login = request.form.get('login-password') 
+
+        payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": email_login
+            }
+        }
+
+        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        responseJson= response.json()
         
-        response = users.query(
-        KeyConditionExpression=Key('email').eq(email_login),
-        FilterExpression=Attr('password').eq(password_login)
-        )
-        if not response['Items']:
-            error = "Email or password is invalid"  
+        if 'Item' not in responseJson:
+            error = "User does not exist, sign up!" 
+
+        elif responseJson['Item']['password'] != password_login:
+            error = "Password is incorrect!" 
+
         else:
             session['user_email'] = email_login
             return redirect(url_for('home'))
@@ -204,16 +271,21 @@ def logout():
 @app.route('/delete/profile-picture')
 def deletepp():
     s3.delete_object(Bucket=BUCKET_NAME,Key=g.email)
-    response = users.get_item(Key={'email': g.email})
-    users.update_item(
-        Key={
-            'email': g.email
-        },
-        UpdateExpression="set image_path = :i",
-        ExpressionAttributeValues={
-            ":i" : None             
+    payload = {
+        "operation": "update",
+        "tableName": "users",
+        "payload": {
+            "key": {
+                "email": g.email
+            },
+            "UpdateExpression" : "set image_path = :i",
+            "ExpressionAttributeValues": {
+                ":i" : None
+            }
         }
-        )
+    }
+            
+    response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
     return redirect(url_for('home'))
         
 if __name__ == '__main__':
