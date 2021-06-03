@@ -13,7 +13,7 @@ app.secret_key = 'mysecretkey'
 dynamodb = boto3.resource('dynamodb')
 dynamodb_client = boto3.client('dynamodb')
 s3 = boto3.client('s3')
-BUCKET_NAME = 'mysocialapp'
+BUCKET_NAME = 'mysocialapp2'
 users = dynamodb.Table('users')
 
 @app.before_request
@@ -58,7 +58,7 @@ def edit_profile():
         img = request.files['edit-image']
         
         if img:
-            image = 'https://mysocialapp.s3.us-east-2.amazonaws.com/' + g.email
+            image = 'https://mysocialapp2.s3.us-east-2.amazonaws.com/' + g.email
             filename = secure_filename(img.filename)
             filename = os.path.join(dirname, 'static/img/'+ filename)
             img.save(filename)
@@ -136,15 +136,32 @@ def register():
         if response['Items']:
             error = "The email already exists"  
 
+        # OLD DB CODE
+        # else:
+        #     users.put_item(
+        #         Item={
+        #             'email': email_signup,
+        #             'username': username_signup,
+        #             'password' : password_signup,
+        #             'date' : date
+        #         }
+        #     )
+        #     return redirect(url_for('login'))
+
         else:
-            users.put_item(
-                Item={
-                    'email': email_signup,
-                    'username': username_signup,
-                    'password' : password_signup,
-                    'date' : date
+            payload = {
+                "operation": "create",
+                "tableName": "users",
+                "payload":{
+                    "email": "kevy@hotmail.com ",
+                    "date" : "2021-11-30",       
+                    "password" : "asldfkjasdf",             
+                    "username": "asdlfkasjldfkj"
                 }
-            )
+            }
+            
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+            print(response)
             return redirect(url_for('login'))
         
     return render_template('signup.html',error = error)
