@@ -101,16 +101,19 @@ def edit_password():
         old_pw = request.form.get('edit-old-pw')
         new_pw = request.form.get('edit-new-pw')
     
-                
-        users.update_item(
-        Key={
-            'email': g.email
-        },
-        UpdateExpression="set password = :p",
-        ExpressionAttributeValues={
-            ":p" : password               
-        }
-        )
+        if old_pw == user['password']:
+            users.update_item(
+            Key={
+                'email': g.email
+            },
+            UpdateExpression="set password = :p",
+            ExpressionAttributeValues={
+                ":p" : new_pw              
+            }
+            )
+            flash('Password updated successfully')
+        else:
+            flash('The old password is incorrect')
         return redirect(url_for('edit_password'))
 
 @app.route('/signup',methods=['GET','POST'])
@@ -193,6 +196,21 @@ def login():
 def logout():
    session.pop('user_email', None)
    return redirect(url_for('login'))
+
+@app.route('/delete/profile-picture')
+def deletepp():
+    s3.delete_object(Bucket=BUCKET_NAME,Key=g.email)
+    response = users.get_item(Key={'email': g.email})
+    users.update_item(
+        Key={
+            'email': g.email
+        },
+        UpdateExpression="set image_path = :i",
+        ExpressionAttributeValues={
+            ":i" : None             
+        }
+        )
+    return redirect(url_for('home'))
         
 if __name__ == '__main__':
   app.run(host='127.0.0.1', port=8000, debug=True)

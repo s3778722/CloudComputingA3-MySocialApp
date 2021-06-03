@@ -5,18 +5,6 @@
 
 {% block body %}
 
-{% with messages = get_flashed_messages(with_categories=true)  %}
-  {% if messages %}
-  <div class="alert alert-primary" role="alert">
-    
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-   
-  </div>
-  {% endif %}
-{% endwith %}
-
 <div class="container">
     <h1 class="text-center">
         <img src="/static/img/edit-profile.svg" alt="" width="35px" height="35px">
@@ -38,27 +26,28 @@
                     <input type="text" class="form-control" name="edit-username" value="{{ user['username'] }}">
                 </div>
             </div>
-
+            <br/>
             <div class="form-group row">
                 <label class="col-form-label col-4">About me</label>
                 <div class="col-8">
                     <textarea name="edit-aboutme" class="form-control" cols="30" rows="5">{{user['about']}}</textarea>
                 </div>
             </div>
+            <br/>
             <div class="form-group row">
                 <label class="col-form-label col-4">Age</label>
                 <div class="col-8">
                     <input type="number"  class="form-control" name="edit-age" min="1" max="100" value="{{ user['age'] }}">
                 </div>
             </div>
-
+            <br/>
             <div class="form-group row">
                 <label class="col-form-label col-4">Location</label>
                 <div class="col-8">
                     <input type="text" class="form-control" name="edit-location" value="{{ user['loc'] }}">
                 </div>
             </div>
-
+            <br/>
             <div class="form-group row">
                 <label class="col-form-label col-4">Change photo</label>
                 <div class="col-8">
@@ -68,10 +57,12 @@
                         height:250px;
                         padding: 10px;">
                     {% endif %}
+                    <a class="btn btn-outline-danger btn-sm" href="/delete/profile-picture" role="button">Delete Profile Picture</a>
+
                     <input type="file" class="form-control-file" name="edit-image" value="file" accept="image/*">
                 </div>
             </div>
-
+            <br/>
             <div class="form-group row">
                 <div class="col-8 offset-4">
                     <button type="submit" class="btn btn-primary btn-dark">Update</button>
