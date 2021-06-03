@@ -10,11 +10,8 @@ dirname = os.path.dirname(__file__)
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'
 
-dynamodb = boto3.resource('dynamodb')
-dynamodb_client = boto3.client('dynamodb')
 s3 = boto3.client('s3')
 BUCKET_NAME = 'mysocialapp2'
-users = dynamodb.Table('users')
 
 @app.before_request
 def before_request():
