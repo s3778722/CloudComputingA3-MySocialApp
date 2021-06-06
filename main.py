@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, flash, redirect, url_for, ses
 import requests
 import boto3
 import os
+import logging
 from boto3.dynamodb.conditions import Key, Attr
 from werkzeug.utils import secure_filename
 from datetime import datetime
 dirname = os.path.dirname(__file__)
 
-application = app = Flask(__name__)
+app = Flask(__name__)
 app.secret_key = 'mysecretkey'
 
 s3 = boto3.client('s3')
@@ -39,45 +40,32 @@ def index():
 
 @app.route('/home',methods=['GET','POST'])
 def home():
-    payload = {
-            "operation": "read",
-            "tableName": "users",
-            "payload": {
-                "email": g.email
-            }
-        }
-    response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
-    responseJson = response.json()
+    # payload = {
+    #         "operation": "read",
+    #         "tableName": "users",
+    #         "payload": {
+    #             "email": g.email
+    #         }
+    #     }
+    # response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+    # responseJson = response.json()
 
-    user = responseJson['Item']
+    # user = responseJson['Item']
 
-    payload = {
+    payload2 = {
             "operation": "list",
             "tableName": "posts",
             "payload": {}
         }
-    response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
-    responseJson = response.json()
-    posts = responseJson['Items']
+    response2 = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload2, verify=True)
+    responseJson2 = response2.json()
+    app.logger.info("stupio")
+    print(responseJson2)
+    posts = responseJson2['Items']/forpppos
+    print(posts)
 
     if request.method == 'GET':
         return render_template('home.html', user = user, posts = posts)
-    
-    elif request.method == 'POST':
-        payload = {
-            "operation": "create",
-            "tableName": "posts",
-            "payload": {
-                "id": 101,
-                "content": request.form.get('post-content'),
-                "likes": "0",
-                "username": g.username
-            }
-        }
-
-        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
-        return redirect(url_for('home'))
-
     
 @app.route('/edit/profile',methods=['GET','POST'])
 def edit_profile():

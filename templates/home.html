@@ -38,6 +38,32 @@
         </div>
         <div class="col-8">
             <h4>News Feed</h4>
+            <div>
+                <form method="post" class="form-horizontal" enctype="multipart/form-data">
+                    <div class="form-group row">
+                        <div class="col-8">
+                            <input type="text" class="form-control" name="post-content" placeholder="Make a post!">
+                        </div>
+                    </div>
+                    <br/>
+                    <div class="form-group row">
+                        <div class="col-8 offset-4">
+                            <button type="submit" class="btn btn-primary btn-dark">Post</button>
+                        </div>
+                    </div>
+                </form>
+                <br/>
+            </div>
+
+            {% if posts %}
+                {% for post in posts %}
+                <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
+                    <h5>{{post['username']}}</h5>
+                    <p>{{post['content']}}</p>
+                    <p>{{post['likes']}} likes <button>LIKE THIS</button>&nbsp;<button>COMMENT</button></p>
+                </div>
+                {% endfor %}                
+            {% endif %}    
         </div>
     </div>
   </div>
