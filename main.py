@@ -40,28 +40,17 @@ def index():
 
 @app.route('/home',methods=['GET','POST'])
 def home():
-    # payload = {
-    #         "operation": "read",
-    #         "tableName": "users",
-    #         "payload": {
-    #             "email": g.email
-    #         }
-    #     }
-    # response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
-    # responseJson = response.json()
 
-    # user = responseJson['Item']
-
-    payload2 = {
+    payload = {
             "operation": "list",
             "tableName": "posts",
             "payload": {}
         }
-    response2 = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload2, verify=True)
-    responseJson2 = response2.json()
+    response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+    responseJson = response.json()
     app.logger.info("stupio")
-    print(responseJson2)
-    posts = responseJson2['Items']/forpppos
+    print(responseJson)
+    posts = responseJson['Items']/forpppos
     print(posts)
 
     if request.method == 'GET':

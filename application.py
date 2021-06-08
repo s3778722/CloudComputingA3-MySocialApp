@@ -52,10 +52,15 @@ def home():
     user = responseJson['Item']
 
     payload = {
-            "operation": "list",
-            "tableName": "posts",
-            "payload": {}
+        "operation": "query",
+        "tableName": "posts",
+        "payload": {
+            "index": "GSI-datetime-index",
+            "key" : "GSI",
+            "eq" : "ok",
+            "ascending" : "false"
         }
+    }
     response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
     responseJson = response.json()
     posts = responseJson['Items']
@@ -77,6 +82,65 @@ def home():
 
         response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
         return redirect(url_for('home'))
+
+@app.route('/post',methods=['GET','POST'])
+def post():
+    payload = {
+            "operation": "read",
+            "tableName": "users",
+            "payload": {
+                "email": g.email
+            }
+        }
+    response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+    responseJson = response.json()
+
+    user = responseJson['Item']
+
+    idStr = request.args.get('id')
+    id = int(idStr)
+    payload = {
+            "operation": "read",
+            "tableName": "posts",
+            "payload": {
+                "id": id
+            }
+        }
+    response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+    responseJson = response.json()
+    post = responseJson['Item']
+
+    payload = {
+        "operation": "query",
+        "tableName": "comments",
+        "payload": {
+            "index": "postid-datetime-index",
+            "key" : "postid",
+            "eq" : id,
+            "ascending" : "true"
+            }
+        }
+    response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+    responseJson = response.json()
+    comments = responseJson['Items']
+
+    if request.method == 'GET':
+        return render_template('post.html', user = user, post = post, comments = comments)
+    
+#     elif request.method == 'POST':
+#         payload = {
+#             "operation": "create",
+#             "tableName": "posts",
+#             "payload": {
+#                 "id": 101,
+#                 "content": request.form.get('post-content'),
+#                 "likes": "0",
+#                 "username": g.username
+#             }
+#         }
+
+#         response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+#         return redirect(url_for('home'))
 
     
 @app.route('/edit/profile',methods=['GET','POST'])

@@ -37,33 +37,42 @@
             <hr/>
         </div>
         <div class="col-8">
-            <h4>News Feed</h4>
-            <div>
+            <h4>Post</h4>
+            {% if post %}
+                <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
+                    <h5>{{post['username']}}<p>{{post['datetime']}}</p></h5>
+                    <p>{{post['content']}}</p>
+                    <p>{{post['likes']}} likes<button>LIKE THIS</button></p>
+                </div>           
+            {% endif %}
+            {% if comments %}
+            <br>
+            <h4>Comments</h4>
+                {% for comment in comments %}
+                <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px; margin-left: 40px;">
+                    <h5>{{comment['username']}}<p>{{comment['datetime']}}</p></h5>
+                    <p>{{comment['content']}}</p>
+                    <p>{{comment['likes']}} likes 0 comments (total comments not added)<button>LIKE THIS</button></p>
+                </div>
+                {% endfor %}                
+            {% endif %}    
+            <h4 style="margin-left: 40px;">Comment</h4>
+            <div style="margin-left: 40px;">
                 <form method="post" class="form-horizontal" enctype="multipart/form-data">
                     <div class="form-group row">
                         <div class="col-8">
-                            <input type="text" class="form-control" name="post-content" placeholder="Make a post!">
+                            <input type="text" class="form-control" name="comment-content" placeholder="Comment on this post!">
                         </div>
                     </div>
                     <br/>
                     <div class="form-group row">
                         <div class="col-8 offset-4">
-                            <button type="submit" class="btn btn-primary btn-dark">Post</button>
+                            <button type="submit" class="btn btn-primary btn-dark">Comment</button>
                         </div>
                     </div>
                 </form>
                 <br/>
-            </div>
-
-            {% if posts %}
-                {% for post in posts %}
-                <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
-                    <h5>{{post['username']}}<p>{{post['datetime']}}</p></h5>
-                    <p>{{post['content']}}</p>
-                    <p>{{post['likes']}} likes 0 comments (total comments not added)<button>LIKE THIS</button>&nbsp;<a href="/post?id={{post['id']}}"><button>COMMENT</button></a></p>
-                </div>
-                {% endfor %}                
-            {% endif %}    
+            </div>  
         </div>
     </div>
   </div>
