@@ -76,7 +76,7 @@ def home():
                 "tableName": "posts",
                 "payload": {
                     "content": request.form.get('post-content'),
-                    "datetime" : datetime.now().strftime("%H:%M %d-%m-%Y"),
+                    "datetime" : datetime.now().strftime("%d-%m-%Y %H:%M"),
                     "likes": "0",
                     "GSI" : "ok",
                     "username": g.username
@@ -164,7 +164,7 @@ def post():
                 "payload": {
                     "content": request.form.get('comment-content'),
                     "postid" : int(request.form.get('comment-id')),
-                    "datetime" : datetime.now().strftime("%H:%M %d-%m-%Y"),
+                    "datetime" : datetime.now().strftime("%d-%m-%Y %H:%M"),
                     "likes": "0",
                     "username": g.username
                 }
