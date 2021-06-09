@@ -69,18 +69,45 @@ def home():
         return render_template('home.html', user = user, posts = posts)
     
     elif request.method == 'POST':
-        payload = {
-            "operation": "create",
-            "tableName": "posts",
-            "payload": {
-                "id": 101,
-                "content": request.form.get('post-content'),
-                "likes": "0",
-                "username": g.username
-            }
-        }
 
-        response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        if request.form.get('post-content') is not None:
+            payload = {
+                "operation": "create",
+                "tableName": "posts",
+                "payload": {
+                    "content": request.form.get('post-content'),
+                    "datetime" : datetime.now().strftime("%H:%M %d-%m-%Y"),
+                    "likes": "0",
+                    "GSI" : "ok",
+                    "username": g.username
+                }
+            }
+
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+
+        elif request.form.get('like-post-id') is not None:
+
+            likeInt = int(request.form.get('like-post-count'))
+            LikeNew = likeInt + 1
+            likeStr = str(LikeNew)
+
+            payload = {
+                "operation": "update",
+                "tableName": "posts",
+                "payload": {
+                    "key": {
+                        "id": int(request.form.get('like-post-id'))
+                        },
+                    "UpdateExpression": "set likes = :l",
+                    "ExpressionAttributeValues": {
+                        ":l": likeStr
+                        }
+                    }
+            }
+
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+
+
         return redirect(url_for('home'))
 
 @app.route('/post',methods=['GET','POST'])
@@ -127,20 +154,70 @@ def post():
     if request.method == 'GET':
         return render_template('post.html', user = user, post = post, comments = comments)
     
-#     elif request.method == 'POST':
-#         payload = {
-#             "operation": "create",
-#             "tableName": "posts",
-#             "payload": {
-#                 "id": 101,
-#                 "content": request.form.get('post-content'),
-#                 "likes": "0",
-#                 "username": g.username
-#             }
-#         }
+    elif request.method == 'POST':
 
-#         response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
-#         return redirect(url_for('home'))
+        if request.form.get('comment-content') is not None:
+
+            payload = {
+                "operation": "create",
+                "tableName": "comments",
+                "payload": {
+                    "content": request.form.get('comment-content'),
+                    "postid" : int(request.form.get('comment-id')),
+                    "datetime" : datetime.now().strftime("%H:%M %d-%m-%Y"),
+                    "likes": "0",
+                    "username": g.username
+                }
+            }
+
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+        
+        elif request.form.get('like-comment-id') is not None:
+
+            likeInt = int(request.form.get('like-comment-count'))
+            LikeNew = likeInt + 1
+            likeStr = str(LikeNew)
+
+            payload = {
+                "operation": "update",
+                "tableName": "comments",
+                "payload": {
+                    "key": {
+                        "id": int(request.form.get('like-comment-id'))
+                        },
+                    "UpdateExpression": "set likes = :l",
+                    "ExpressionAttributeValues": {
+                        ":l": likeStr
+                        }
+                    }
+            }
+
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+
+        elif request.form.get('like-post-id') is not None:
+
+            likeInt = int(request.form.get('like-post-count'))
+            LikeNew = likeInt + 1
+            likeStr = str(LikeNew)
+
+            payload = {
+                "operation": "update",
+                "tableName": "posts",
+                "payload": {
+                    "key": {
+                        "id": int(request.form.get('like-post-id'))
+                        },
+                    "UpdateExpression": "set likes = :l",
+                    "ExpressionAttributeValues": {
+                        ":l": likeStr
+                        }
+                    }
+            }
+
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+
+        
+        return redirect("post?id="+ idStr)
 
     
 @app.route('/edit/profile',methods=['GET','POST'])

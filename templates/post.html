@@ -42,7 +42,12 @@
                 <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
                     <h5>{{post['username']}}<p>{{post['datetime']}}</p></h5>
                     <p>{{post['content']}}</p>
-                    <p>{{post['likes']}} likes<button>LIKE THIS</button></p>
+                    <p>{{post['likes']}} likes 
+                        <form method="post" class="form-horizontal" enctype="multipart/form-data">
+                            <input type="hidden" class="form-control" name="like-post-count" value="{{post['likes']}}" >
+                            <button type="submit" name="like-post-id" value="{{post['id']}}">LIKE THIS</button>
+                        </form>
+                    </p>
                 </div>           
             {% endif %}
             {% if comments %}
@@ -52,16 +57,22 @@
                 <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px; margin-left: 40px;">
                     <h5>{{comment['username']}}<p>{{comment['datetime']}}</p></h5>
                     <p>{{comment['content']}}</p>
-                    <p>{{comment['likes']}} likes 0 comments (total comments not added)<button>LIKE THIS</button></p>
+                    <p>{{comment['likes']}} likes 
+                        <form method="post" class="form-horizontal" enctype="multipart/form-data">
+                            <input type="hidden" class="form-control" name="like-comment-count" value="{{comment['likes']}}" >
+                            <button type="submit" name="like-comment-id" value="{{comment['id']}}">LIKE THIS</button>
+                        </form>
+                    </p>
                 </div>
                 {% endfor %}                
             {% endif %}    
-            <h4 style="margin-left: 40px;">Comment</h4>
+            <h4 style="margin-left: 40px;">Write Comment</h4>
             <div style="margin-left: 40px;">
                 <form method="post" class="form-horizontal" enctype="multipart/form-data">
                     <div class="form-group row">
                         <div class="col-8">
                             <input type="text" class="form-control" name="comment-content" placeholder="Comment on this post!">
+                            <input type="hidden" class="form-control" name="comment-id" value="{{post['id']}}" >
                         </div>
                     </div>
                     <br/>
