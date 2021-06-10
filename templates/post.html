@@ -45,7 +45,7 @@
                     <p>{{post['likes']}} likes 
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <input type="hidden" class="form-control" name="like-post-count" value="{{post['likes']}}" >
-                            <button type="submit" name="like-post-id" value="{{post['id']}}">LIKE THIS</button>
+                            <button class="btn btn-outline-primary btn-sm" type="submit" name="like-post-id" value="{{post['id']}}">LIKE THIS</button>
                         </form>
                     </p>
                 </div>           
@@ -60,7 +60,7 @@
                     <p>{{comment['likes']}} likes 
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <input type="hidden" class="form-control" name="like-comment-count" value="{{comment['likes']}}" >
-                            <button type="submit" name="like-comment-id" value="{{comment['id']}}">LIKE THIS</button>
+                            <button class="btn btn-outline-primary btn-sm" type="submit" name="like-comment-id" value="{{comment['id']}}">LIKE THIS</button>
                         </form>
                     </p>
                 </div>
@@ -74,13 +74,11 @@
                             <input type="text" class="form-control" name="comment-content" placeholder="Comment on this post!">
                             <input type="hidden" class="form-control" name="comment-id" value="{{post['id']}}" >
                         </div>
-                    </div>
-                    <br/>
-                    <div class="form-group row">
-                        <div class="col-8 offset-4">
+                        <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-dark">Comment</button>
                         </div>
                     </div>
+                    
                 </form>
                 <br/>
             </div>  

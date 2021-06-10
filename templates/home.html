@@ -44,10 +44,7 @@
                         <div class="col-8">
                             <input type="text" class="form-control" name="post-content" placeholder="Make a post!">
                         </div>
-                    </div>
-                    <br/>
-                    <div class="form-group row">
-                        <div class="col-8 offset-4">
+                        <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-dark">Post</button>
                         </div>
                     </div>
@@ -63,10 +60,10 @@
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <p>{{post['likes']}} likes 
                                 <input type="hidden" class="form-control" name="like-post-count" value="{{post['likes']}}" >
-                                <button type="submit" name="like-post-id" value="{{post['id']}}">LIKE THIS</button>
-                                <a href="/post?id={{post['id']}}"><button type="button">COMMENT</button></a>
+                                <button class="btn btn-outline-primary btn-sm" type="submit" name="like-post-id" value="{{post['id']}}">LIKE</button>
+                                <a href="/post?id={{post['id']}}"><button class="btn btn-outline-secondary btn-sm" type="button">COMMENT</button></a>
                             </p>
-                        </form>&nbsp;
+                        </form>
                 </div>
                 {% endfor %}                
             {% endif %}    
