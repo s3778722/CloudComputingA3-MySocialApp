@@ -1,0 +1,41 @@
+{% extends 'portal_base.html' %}
+
+{% block title %}Admin Login - MySocialApp{% endblock title %}
+
+{% block body %}
+{% if error %}
+    <div class="alert alert-primary" role="alert">
+        Error: {{error}}
+    </div> 
+{% endif %}
+
+<div class="container" style="padding-top:30px">
+    <div>
+        <form method="post" class="form-horizontal">
+            <h1>Admin Login</h1>
+            <hr/><br/>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Username</label>
+                <div class="col-8">
+                    <input type="text" class="form-control" name="login-username" required="required">
+                </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+                <label class="col-form-label col-4">Password</label>
+                <div class="col-8">
+                    <input type="password" class="form-control" name="login-password" required="required">
+                </div>
+            </div>
+            <br/>
+            <div class="form-group row">
+                <div class="col-8 offset-4">
+                    <button type="submit" class="btn btn-primary btn-dark">Login</button>
+                </div>
+            </div>
+        </form>
+        <br/>
+    </div>
+</div>
+
+{% endblock body %}

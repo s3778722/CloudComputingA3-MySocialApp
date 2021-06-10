@@ -5,8 +5,8 @@ import os
 from boto3.dynamodb.conditions import Key, Attr
 from werkzeug.utils import secure_filename
 from datetime import datetime
-dirname = os.path.dirname(__file__)
 
+dirname = os.path.dirname(__file__)
 application = app = Flask(__name__)
 app.secret_key = 'mysecretkey'
 
