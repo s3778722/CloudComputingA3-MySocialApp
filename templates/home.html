@@ -66,7 +66,9 @@
                     {% endif %}
                     <p><strong>{{post['username']}}</strong></p>
                     <p>Date/time: {{post['datetime']}}</p>
-                    <h5>{{post['content']}}</h5>
+                    <hr/>
+                    <p>{{post['content']}}</p>
+                    <hr/>
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <p>{{post['likes']}} likes 
                                 <input type="hidden" class="form-control" name="like-post-count" value="{{post['likes']}}" >
@@ -74,6 +76,7 @@
                                 <a href="/post?id={{post['id']}}"><button class="btn btn-outline-secondary btn-sm" type="button">COMMENT</button></a>
                             </p>
                         </form>
+
                 </div>
                 {% endfor %}                
             {% endif %}    

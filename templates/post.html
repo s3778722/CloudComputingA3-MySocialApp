@@ -40,12 +40,25 @@
             <h4>Post</h4>
             {% if post %}
                 <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
-                    <h5>{{post['username']}}<p>{{post['datetime']}}</p></h5>
+                    <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
+                            {% if user['image_path'] %}
+                    <div class="d-flex justify-content-left">
+                        <img src="{{  user['image_path'] }}" alt="" style="border-radius: 50%;" width="50px" height="50px">
+                    </div>
+                    {% else %}
+                    <div class="d-flex justify-content-left">
+                        <img src=" https://mysocialapp.s3.us-east-2.amazonaws.com/default" alt="" style="border-radius: 50%;" width="50px" height="50px">
+                    </div>
+                    {% endif %}
+                    <p><strong>{{post['username']}}</strong></p>
+                    <p>Date/time: {{post['datetime']}}</p>
+                    <hr/>
                     <p>{{post['content']}}</p>
+                    <hr/>
                     <p>{{post['likes']}} likes 
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <input type="hidden" class="form-control" name="like-post-count" value="{{post['likes']}}" >
-                            <button class="btn btn-outline-primary btn-sm" type="submit" name="like-post-id" value="{{post['id']}}">LIKE THIS</button>
+                            <button class="btn btn-outline-primary btn-sm" type="submit" name="like-post-id" value="{{post['id']}}">LIKE</button>
                         </form>
                     </p>
                 </div>           
@@ -55,12 +68,15 @@
             <h4>Comments</h4>
                 {% for comment in comments %}
                 <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px; margin-left: 40px;">
-                    <h5>{{comment['username']}}<p>{{comment['datetime']}}</p></h5>
+                    <p><strong>{{post['username']}}</strong></p>
+                    <p>Date/time: {{post['datetime']}}</p>
+                    <hr/>
                     <p>{{comment['content']}}</p>
+                    <hr/>
                     <p>{{comment['likes']}} likes 
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <input type="hidden" class="form-control" name="like-comment-count" value="{{comment['likes']}}" >
-                            <button class="btn btn-outline-primary btn-sm" type="submit" name="like-comment-id" value="{{comment['id']}}">LIKE THIS</button>
+                            <button class="btn btn-outline-primary btn-sm" type="submit" name="like-comment-id" value="{{comment['id']}}">LIKE</button>
                         </form>
                     </p>
                 </div>
