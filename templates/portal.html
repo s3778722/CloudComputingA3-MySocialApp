@@ -19,7 +19,12 @@
                 {% endfor %}
             </tr>
         {% endfor %}
-        </table>
+        </table>   
     {% endif %}
+    <h1>PLEASE MAKE A QUERY!</h1>
+        <form method="post" class="form-horizontal" enctype="multipart/form-data">
+            <input type="text" class="form-control" name="query" value='SELECT * FROM "social_users"."social_users"'>
+            <button class="btn btn-outline-primary btn-sm" type="submit">QUERY</button>
+        </form>
 
 {% endblock body %}

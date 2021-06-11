@@ -13,21 +13,26 @@ def before_request():
         user_admin = session['user_admin']
         g.username = user_admin
 
-@app.route('/portal')
+@app.route('/portal', methods=['GET','POST'])
 def portal():
     if not 'user_admin' in session:
         return redirect(url_for('index'))
 
-    payload = {
-        "operation": "query",
-        "query": "SELECT * FROM \"social_users\".\"social_users\" limit 10"
-    }
+    if request.method == 'GET':
+        return render_template('portal.html')
+    
+    if request.method == 'POST':
+        query = request.form.get('query')
 
-    response = requests.post('https://hfb8rnrjji.execute-api.us-east-1.amazonaws.com/api/athena', json = payload, verify=True)
-    responseJson = response.json()
-    print(responseJson)
+        payload = {
+            'operation': 'query',
+            'query': query
+        }
+        response = requests.post('https://hfb8rnrjji.execute-api.us-east-1.amazonaws.com/api/athena', json = payload, verify=True)
+        responseJson = response.json()
+        print(responseJson)
 
-    return render_template('portal.html', json=responseJson)
+        return render_template('portal.html', json=responseJson)
 
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -58,5 +63,5 @@ def logout():
    return redirect(url_for('index'))
         
 if __name__ == '__main__':
-  app.run(host='127.0.0.1', port=8080, debug=True)
+  app.run(host='0.0.0.0', port=80, debug=True)
  
