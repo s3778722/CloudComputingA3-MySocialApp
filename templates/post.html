@@ -51,7 +51,7 @@
                     </div>
                     {% endif %}
                     <p><strong>{{post['username']}}</strong></p>
-                    <p>Date/time: {{post['datetime']}}</p>
+                    <i>Date/time: {{post['datetime']}}</i>
                     <hr/>
                     <p>{{post['content']}}</p>
                     <hr/>
@@ -69,7 +69,7 @@
                 {% for comment in comments %}
                 <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px; margin-left: 40px;">
                     <p><strong>{{post['username']}}</strong></p>
-                    <p>Date/time: {{post['datetime']}}</p>
+                    <i>Date/time: {{post['datetime']}}</i>
                     <hr/>
                     <p>{{comment['content']}}</p>
                     <hr/>
