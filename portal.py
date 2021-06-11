@@ -17,6 +17,17 @@ def before_request():
 def portal():
     if not 'user_admin' in session:
         return redirect(url_for('index'))
+
+    payload = {
+        "operation": "query",
+        "query": "SELECT * FROM \"social_users\".\"social_users\" limit 10"
+    }
+
+    response = requests.post('https://hfb8rnrjji.execute-api.us-east-1.amazonaws.com/api/athena', json = payload, verify=True)
+    responseJson = response.json()
+    print(responseJson)
+
+
     return render_template('portal.html')
 
 @app.route('/',methods=['GET','POST'])
