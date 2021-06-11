@@ -55,7 +55,7 @@
             {% if posts %}
                 {% for post in posts %}
                     <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
-                            {% if user['image_path'] %}
+                    {% if user['image_path'] %}
                     <div class="d-flex justify-content-left">
                         <img src="{{  user['image_path'] }}" alt="" style="border-radius: 50%;" width="50px" height="50px">
                     </div>
@@ -74,9 +74,9 @@
                                 <input type="hidden" class="form-control" name="like-post-count" value="{{post['likes']}}" >
                                 <button class="btn btn-outline-primary btn-sm" type="submit" name="like-post-id" value="{{post['id']}}">LIKE</button>
                                 <a href="/post?id={{post['id']}}"><button class="btn btn-outline-secondary btn-sm" type="button">COMMENT</button></a>
+                                <button class="btn btn-outline-danger btn-sm" type="submit" name="delete-post-id" value="{{post['id']}}">DELETE</button>
                             </p>
                         </form>
-
                 </div>
                 {% endfor %}                
             {% endif %}    

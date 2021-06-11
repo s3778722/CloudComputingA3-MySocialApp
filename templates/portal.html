@@ -9,8 +9,15 @@
         <img src="/static/img/home.svg" alt="" width="35px" height="35px">
         Admin Portal
     </h1>
+    <h1>QUERY HERE</h1>
+    <form method="post" class="form-horizontal" enctype="multipart/form-data">
+        <input type="text" class="form-control" name="query" value='SELECT * FROM "social_users"."social_users"'>
+        <br>
+        <button class="btn btn-outline-primary btn-sm" type="submit">QUERY</button>
+    </form>
+    <br>
     {% if json %}
-        <h1>MY DATA</h1>
+        <h1>RESULT</h1>
         <table>
         {% for row in json['ResultSet']['Rows'] %}
             <tr>
@@ -21,10 +28,4 @@
         {% endfor %}
         </table>   
     {% endif %}
-    <h1>PLEASE MAKE A QUERY!</h1>
-        <form method="post" class="form-horizontal" enctype="multipart/form-data">
-            <input type="text" class="form-control" name="query" value='SELECT * FROM "social_users"."social_users"'>
-            <button class="btn btn-outline-primary btn-sm" type="submit">QUERY</button>
-        </form>
-
 {% endblock body %}

@@ -106,6 +106,17 @@ def home():
             }
 
             response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+            
+        elif request.form.get('delete-post-id') is not None:
+            payload = {
+                "operation": "delete",
+                "tableName": "posts",
+                "payload": {
+                    "id": int(request.form.get('delete-post-id'))
+                }
+            }
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+
 
 
         return redirect(url_for('home'))
