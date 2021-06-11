@@ -255,7 +255,7 @@ def edit_profile():
         img = request.files['edit-image']
         
         if img:
-            image = 'https://mysocialapp2.s3.us-east-2.amazonaws.com/' + g.email
+            image = 'https://mysocialapp2.s3.us-east-1.amazonaws.com/' + g.email
             filename = secure_filename(img.filename)
             filename = os.path.join(dirname, 'static/img/'+ filename)
             img.save(filename)
