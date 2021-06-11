@@ -27,8 +27,7 @@ def portal():
     responseJson = response.json()
     print(responseJson)
 
-
-    return render_template('portal.html')
+    return render_template('portal.html', json=responseJson)
 
 @app.route('/',methods=['GET','POST'])
 def index():
@@ -59,5 +58,5 @@ def logout():
    return redirect(url_for('index'))
         
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=80, debug=True)
+  app.run(host='127.0.0.1', port=8080, debug=True)
  

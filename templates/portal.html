@@ -9,4 +9,17 @@
         <img src="/static/img/home.svg" alt="" width="35px" height="35px">
         Admin Portal
     </h1>
+    {% if json %}
+        <h1>MY DATA</h1>
+        <table>
+        {% for row in json['ResultSet']['Rows'] %}
+            <tr>
+                {% for data in row['Data'] %}
+                <td>{{data['VarCharValue']}}</td> 
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </table>
+    {% endif %}
+
 {% endblock body %}
