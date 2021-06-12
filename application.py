@@ -69,21 +69,49 @@ def home():
         return render_template('home.html', user = user, posts = posts)
     
     elif request.method == 'POST':
-
         if request.form.get('post-content') is not None:
-            payload = {
-                "operation": "create",
-                "tableName": "posts",
-                "payload": {
-                    "content": request.form.get('post-content'),
-                    "datetime" : datetime.now().strftime("%d-%m-%Y %H:%M"),
-                    "likes": "0",
-                    "GSI" : "ok",
-                    "username": g.username,
-                    "post-profile-img": request.form.get('post-profile-img')
+            img = request.files['add-image']
+            idString = datetime.now().strftime("%Y%m%d%H%M%S%f")
+            intid = int(idString)
+            if img:
+                image_url = 'https://mysocialapp2.s3.us-east-1.amazonaws.com/' + idString
+                filename = secure_filename(img.filename)
+                filename = os.path.join(dirname, 'static/img/'+ filename)
+                img.save(filename)
+                s3.upload_file(
+                    Bucket = BUCKET_NAME,
+                    Filename=filename,
+                    Key = idString
+                )
+                payload = {
+                    "operation": "create",
+                    "tableName": "posts",
+                    "payload": {
+                        "id" : intid,
+                        "content": request.form.get('post-content'),
+                        "datetime" : datetime.now().strftime("%d-%m-%Y %H:%M"),
+                        "likes": "0",
+                        "GSI" : "ok",
+                        "username": g.username,
+                        "post-profile-img": request.form.get('post-profile-img'),
+                        "post-img" : image_url
+                    }
                 }
-            }
-
+            else:
+                payload = {
+                    "operation": "create",
+                    "tableName": "posts",
+                    "payload": {
+                        "id" : intid,
+                        "content": request.form.get('post-content'),
+                        "datetime" : datetime.now().strftime("%d-%m-%Y %H:%M"),
+                        "likes": "0",
+                        "GSI" : "ok",
+                        "username": g.username,
+                        "post-profile-img": request.form.get('post-profile-img'),
+                        "post-img" : request.form.get('add-image')
+                    }
+                }
             response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
 
         elif request.form.get('like-post-id') is not None:

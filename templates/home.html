@@ -43,8 +43,11 @@
                     <div class="form-group row">
                         <div class="col-8">
                             <input type="text" class="form-control" name="post-content" placeholder="Make a post!">
-                            <input type="hidden" class="form-control" name="post-profile-img" value="{{ user['image_path'] }}">
+                            <input type="hidden" class="form-control" name="post-profile-img" value="{{ user['image_path'] }}">                
+                            <br>
+                            <input type="file" class="form-control-file" name="add-image" value="file" accept="image/*">
                         </div>
+                    
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary btn-dark">Post</button>
                         </div>
@@ -56,7 +59,7 @@
             {% if posts %}
                 {% for post in posts %}
                     <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
-                    {% if post['post-profile-img'] %}
+                    {% if post['post-profile-img'] and post['post-profile-img'] != "None" and post['post-profile-img'] != "null"  %}
                     <div class="d-flex justify-content-left">
                         <img src="{{  post['post-profile-img'] }}" alt="" style="border-radius: 50%;" width="50px" height="50px">
                     </div>
@@ -69,6 +72,11 @@
                     <i>Date/time: {{post['datetime']}}</i>
                     <hr/>
                     <p>{{post['content']}}</p>
+                    {% if post['post-img'] %}
+                    <div class="d-flex justify-content-left">
+                        <img src="{{  post['post-img'] }}" alt="" width="600px" height="600px">
+                    </div>
+                    {% endif %}
                     <hr/>
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <p>{{post['likes']}} likes 
