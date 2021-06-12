@@ -79,7 +79,8 @@ def home():
                     "datetime" : datetime.now().strftime("%d-%m-%Y %H:%M"),
                     "likes": "0",
                     "GSI" : "ok",
-                    "username": g.username
+                    "username": g.username,
+                    "post-profile-img": request.form.get('post-profile-img')
                 }
             }
 
@@ -177,7 +178,8 @@ def post():
                     "postid" : int(request.form.get('comment-id')),
                     "datetime" : datetime.now().strftime("%d-%m-%Y %H:%M"),
                     "likes": "0",
-                    "username": g.username
+                    "username": g.username,
+                    "comment-profile-img": request.form.get('comment-profile-img')
                 }
             }
 
@@ -227,6 +229,26 @@ def post():
 
             response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
 
+        elif request.form.get('delete-post-id') is not None:
+            payload = {
+                "operation": "delete",
+                "tableName": "posts",
+                "payload": {
+                    "id": int(request.form.get('delete-post-id'))
+                }
+            }
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
+            return redirect(url_for('home'))
+
+        elif request.form.get('delete-comment-id') is not None:
+            payload = {
+                "operation": "delete",
+                "tableName": "comments",
+                "payload": {
+                    "id": int(request.form.get('delete-comment-id'))
+                }
+            }
+            response = requests.post('https://7c77wv9c2g.execute-api.us-east-1.amazonaws.com/api/query', json = payload, verify=True)
         
         return redirect("post?id="+ idStr)
 

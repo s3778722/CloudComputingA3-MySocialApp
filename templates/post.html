@@ -41,9 +41,9 @@
             {% if post %}
                 <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
                     <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px;">
-                            {% if user['image_path'] %}
+                    {% if post['post-profile-img'] %}
                     <div class="d-flex justify-content-left">
-                        <img src="{{  user['image_path'] }}" alt="" style="border-radius: 50%;" width="50px" height="50px">
+                        <img src="{{  post['post-profile-img'] }}" alt="" style="border-radius: 50%;" width="50px" height="50px">
                     </div>
                     {% else %}
                     <div class="d-flex justify-content-left">
@@ -59,6 +59,9 @@
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <input type="hidden" class="form-control" name="like-post-count" value="{{post['likes']}}" >
                             <button class="btn btn-outline-primary btn-sm" type="submit" name="like-post-id" value="{{post['id']}}">LIKE</button>
+                            {% if user['username'] == post['username'] %}
+                                    <button class="btn btn-outline-danger btn-sm" type="submit" name="delete-post-id" value="{{post['id']}}">DELETE</button>
+                            {% endif %}
                         </form>
                     </p>
                 </div>           
@@ -68,6 +71,15 @@
             <h4>Comments</h4>
                 {% for comment in comments %}
                 <div class="card-body" style="border: 1px rgb(199, 199, 199) solid; margin: 5px; margin-left: 40px;">
+                    {% if comment['comment-profile-img'] %}
+                    <div class="d-flex justify-content-left">
+                        <img src="{{  comment['comment-profile-img'] }}" alt="" style="border-radius: 50%;" width="50px" height="50px">
+                    </div>              
+                    {% else %}
+                    <div class="d-flex justify-content-left">
+                        <img src=" https://mysocialapp.s3.us-east-2.amazonaws.com/default" alt="" style="border-radius: 50%;" width="50px" height="50px">
+                    </div>
+                    {% endif %}
                     <p><strong>{{post['username']}}</strong></p>
                     <i>Date/time: {{post['datetime']}}</i>
                     <hr/>
@@ -77,6 +89,9 @@
                         <form method="post" class="form-horizontal" enctype="multipart/form-data">
                             <input type="hidden" class="form-control" name="like-comment-count" value="{{comment['likes']}}" >
                             <button class="btn btn-outline-primary btn-sm" type="submit" name="like-comment-id" value="{{comment['id']}}">LIKE</button>
+                            {% if user['username'] == comment['username'] %}
+                                    <button class="btn btn-outline-danger btn-sm" type="submit" name="delete-comment-id" value="{{comment['id']}}">DELETE</button>
+                            {% endif %}
                         </form>
                     </p>
                 </div>
@@ -88,6 +103,7 @@
                     <div class="form-group row">
                         <div class="col-8">
                             <input type="text" class="form-control" name="comment-content" placeholder="Comment on this post!">
+                            <input type="hidden" class="form-control" name="comment-profile-img" value="{{ user['image_path'] }}">
                             <input type="hidden" class="form-control" name="comment-id" value="{{post['id']}}" >
                         </div>
                         <div class="col-4">
