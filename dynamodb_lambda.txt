@@ -1,0 +1,75 @@
+import json
+import boto3
+from boto3.dynamodb.conditions import Key, Attr
+from datetime import datetime
+dynamodb = boto3.resource('dynamodb')
+
+print ('Loading Function')
+
+def lambda_handler(event, context):
+    
+    operation = event['operation']
+    tableName = event['tableName']
+    payload = event['payload']
+    
+    print('operation=' + operation)
+    print('tableName=' + tableName)
+    
+    table = dynamodb.Table(tableName)
+    reponse = {}
+    
+    if operation == 'create':
+        if tableName == "comments":
+            idString = datetime.now().strftime("%Y%m%d%H%M%S%f")
+            id = int(idString)
+            payload['id'] = id
+        response = table.put_item(Item=payload)
+        response['statusCode'] = 200
+        
+    elif operation == 'read':
+        response = table.get_item(Key=payload)
+        response['statusCode'] = 200
+        
+    elif operation == 'update':
+        response = table.update_item(Key=payload['key'], UpdateExpression=payload['UpdateExpression'], ExpressionAttributeValues=payload['ExpressionAttributeValues'])
+        response['statusCode'] = 200
+        
+    elif operation == 'delete':
+        response = table.delete_item(Key=payload)
+        response['statusCode'] = 200
+        
+    elif operation == 'list': # not being used.
+        response = None
+        scan_kwargs = {
+                    'FilterExpression': Attr('id').exists(),
+                    'ProjectionExpression': "#i, #c, #l, #u",
+                    'ExpressionAttributeNames': {"#i": "id", "#c": "content", "#l": "likes", "#u" : "username"},
+                    'Limit': 10,
+                }
+        
+        done = False
+        start_key = None
+
+        while not done:
+            if start_key:
+                scan_kwargs['ExclusiveStartKey'] = start_key
+            response = table.scan(**scan_kwargs)
+            start_key = response.get('LastEvaluatedKey', None)
+            done = start_key is None
+        
+        response['statusCode'] = 200
+        
+    elif operation == 'query':
+        sort = None
+        if payload['ascending'] == "true":
+            sort = True
+        elif payload['ascending'] == "false":
+            sort = False
+        response = table.query(IndexName=payload['index'],ScanIndexForward=sort,KeyConditionExpression=Key(payload['key']).eq(payload['eq']))
+        response['statusCode'] = 200
+            
+    else:
+        print('no matching operation')
+    
+    return response
+    
