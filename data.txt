@@ -1,0 +1,17 @@
+SET hive.mapred.supports.subdirectories=TRUE;
+
+SET mapred.input.dir.recursive=TRUE;
+
+create database social_users;
+use social_users;
+
+CREATE EXTERNAL TABLE SOCIAL_USERS(
+First_Name STRING,
+Last_Name STRING,
+Email STRING,
+Country STRING,
+Age INTEGER
+)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+LOCATION 's3://emr-mysocialapp/input/'
+TBLPROPERTIES ("skip.header.line.count"="1"); 
