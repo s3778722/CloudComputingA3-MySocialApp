@@ -1,0 +1,30 @@
+import json
+import boto3
+import time
+from datetime import datetime
+
+print ('Loading Function')
+
+def lambda_handler(event, context):
+    
+    operation = event['operation']
+    query = event['query']
+    client = boto3.client('athena')
+    
+    print('operation=' + operation)
+    
+    response = {}
+    
+    if operation == 'query':
+        queryCreate = client.start_query_execution(QueryString=query,QueryExecutionContext={'Database': 'social_users','Catalog': 'AwsDataCatalog'},ResultConfiguration={'OutputLocation':'s3://emr-mysocialapp/aggregation/'})
+        print(queryCreate)
+        time.sleep(1.5)
+        executionId = queryCreate['QueryExecutionId']
+        response = client.get_query_results(QueryExecutionId=executionId)
+        print(response)
+            
+    else:
+        print('no matching operation')
+    
+    return response
+    
